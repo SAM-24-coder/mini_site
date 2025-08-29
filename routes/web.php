@@ -23,6 +23,9 @@ Route::prefix('admin')->name('admin.')->controller(UserController::class)->group
     Route::get('/dashboard/create_pmnt', 'create_pmnt')->name('dashboard.create_pmnt');
     Route::post('/dashboard/store_pmnt', 'store_pmnt')->name('dashboard.store_pmnt');
     Route::get('/dashboard/show_pmnt', 'show_pmnt')->name('dashboard.show_pmnt');
-
+    Route::get('/dashboard/show_group', 'show_group')->name('dashboard.show_group');
+    Route::get('/dashboard/create_group', 'create_group')->name('dashboard.create_group');
+    Route::post('/dashboard/store_group', 'store_group')->name('dashboard.store_group');
+    Route::delete('/dashboard/destroy_group/{group}', 'destroy_group')->name('dashboard.destroy_group');
 });
 

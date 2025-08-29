@@ -38,7 +38,6 @@
     </style>
 </head>
 <body>
-    <!-- Top bar -->
     <div class="flex items-center justify-between px-6 py-2 bg-blue-600 sm:py-4 relative overflow-visible">
         <!-- Hamburger button inside header -->
         <div class="hamburger-container absolute left-4 top-1/2 transform -translate-y-1/2 z-50 lg:hidden">
@@ -117,5 +116,9 @@
             }
         });
     </script>
+
+    <footer class="w-full p-4 text-center text-black bg-white">
+        Copyright 2025 - Created by <a href="#" class="text-blue-700">KIROO GAMES</a>
+    </footer>
 </body>
 </html>

@@ -48,7 +48,7 @@
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Tous les statuts</option>
                                 <option value="active" {{ request('status_filter') === 'active' ? 'selected' : '' }}>Actif</option>
-                                <option value="blocked" {{ request('status_filter') === 'blocked' ? 'selected' : '' }}>Bloqué</option>
+                                <option value="inactive" {{ request('status_filter') === 'inactive' ? 'selected' : '' }}>Inactif</option>
                             </select>
                         </div>
                     </div>
@@ -65,6 +65,7 @@
                         </a>
                     </div>
                 </form>
+
             </div>
 
             <!-- INFORMATIONS SUR LES RÉSULTATS -->
@@ -309,18 +310,19 @@
                         </td>
                     </tr>
                     
-                    <!-- Bloqués -->
+                    <!-- Inactifs -->
                     <tr>
                         <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                            inactif 
+                            Inactifs
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                            {{ number_format($stats['inactif']['count']) }}
+                            {{ number_format($stats['inactive']['count']) }}
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-red-600 font-medium">
-                            {{ $stats['inactif']['percentage'] }}%
+                            {{ $stats['inactive']['percentage'] }}%
                         </td>
                     </tr>
+
                 </tbody>
             </table>
         </div>
@@ -339,21 +341,21 @@
             
             <div>
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Bloqués</span>
-                    <span>{{ $stats['inactif']['percentage'] }}%</span>
+                    <span>Inactifs</span>
+                    <span>{{ $stats['inactive']['percentage'] }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactif']['percentage'] }}%"></div>
+                    <div class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactive']['percentage'] }}%"></div>
                 </div>
             </div>
             
             <div>
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
                     <span>Inactifs</span>
-                    <span>{{ $stats['inactif']['percentage'] }}%</span>
+                    <span>{{ $stats['inactive']['percentage'] }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-gray-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactif']['percentage'] }}%"></div>
+                    <div class="bg-gray-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactive']['percentage'] }}%"></div>
                 </div>
             </div>
         </div> -->
