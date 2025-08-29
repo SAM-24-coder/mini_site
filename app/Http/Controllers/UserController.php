@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Userdb;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -22,15 +22,16 @@ class UserController extends Controller
 
     public function show(Request $request): View 
 {
-    $query = Userdb::query();
+    $query = User::query();
     
     // Recherche par nom/prénom
     if ($request->has('search_name') && $request->get('search_name') !== '') {
-        $searchName = $request->get('search_name');
-        $query->where(function($q) use ($searchName) {
-            $q->where('name', 'LIKE', '%' . $searchName . '%')
-              ->orWhere('surname', 'LIKE', '%' . $searchName . '%')
-              ->orWhereRaw("(name || ' ' || surname) LIKE ?", ['%' . $searchName . '%']);
+        $searchTerm = trim($request->get('search_name'));
+        $query->where(function($q) use ($searchTerm) {
+            $q->where('name', 'LIKE', $searchTerm . '%')
+              ->orWhere('surname', 'LIKE', $searchTerm . '%')
+              ->orWhere('name', 'LIKE', '% ' . $searchTerm . '%')
+              ->orWhere('surname', 'LIKE', '% ' . $searchTerm . '%');
         });
     }
     
@@ -55,10 +56,9 @@ class UserController extends Controller
     $users = $query->paginate(10)->appends($request->query());
     
     // Préparer les statistiques
-    $totalUsers = Userdb::count();
-    $activeUsers = Userdb::where('status', 'active')->count();
-    $blockedUsers = Userdb::where('status', 'blocked')->count();
-    $deletedUsers = Userdb::where('status', 'supprime')->count();
+    $totalUsers = User::count();
+    $activeUsers = User::where('status', 'active')->count();
+    $inactiveUsers = User::where('status', 'inactif')->count();
     
     $stats = [
         'total' => $totalUsers,
@@ -66,14 +66,10 @@ class UserController extends Controller
             'count' => $activeUsers,
             'percentage' => $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0
         ],
-        'blocked' => [
-            'count' => $blockedUsers,
-            'percentage' => $totalUsers > 0 ? round(($blockedUsers / $totalUsers) * 100, 1) : 0
+        'inactif' => [
+            'count' => $inactiveUsers,
+            'percentage' => $totalUsers > 0 ? round(($inactiveUsers / $totalUsers) * 100, 1) : 0
         ],
-        'deleted' => [
-            'count' => $deletedUsers,
-            'percentage' => $totalUsers > 0 ? round(($deletedUsers / $totalUsers) * 100, 1) : 0
-        ]
     ];
     
     return view('show', compact('users', 'stats'));
@@ -91,11 +87,11 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'email' => 'required|email|unique:usersdb,email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'gender' => 'required|in:male,female',
             'date_of_birth' => 'nullable|date',
-            'status' => 'required|in:actif,supprime',
+            'status' => 'required|in:active,inactif',
             'password' => 'required|min:8',
             'password_confirmation' => 'required|min:8',
         ]);
@@ -113,7 +109,7 @@ class UserController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $validated['registration_timestamp'] = now();
     
-        Userdb::create($validated);
+        User::create($validated);
         
         return redirect()->route('admin.dashboard.show')->with('success', 'Utilisateur créé avec succès');
     }

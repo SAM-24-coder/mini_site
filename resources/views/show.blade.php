@@ -211,7 +211,7 @@
                                     </td>
                                     
                                     <!-- Actions -->
-                                   <!-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">--->
+                                   <!-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
                                             <a href="#" class="text-blue-600 hover:text-blue-900 transition duration-150">
                                                  Voir
@@ -229,7 +229,7 @@
                                                 </a>
                                             @endif
                                         </div>
-                                    </td>
+                                    </td>--->
                                 </tr>
                             @empty
                                 <tr>
@@ -243,7 +243,7 @@
                                                     Afficher tous les utilisateurs
                                                 </a>
                                             @else
-                                                <div class="text-lg mb-2">📝 Aucun utilisateur</div>
+                                                <div class="text-lg mb-2"> Aucun utilisateur</div>
                                                 <p>Aucun utilisateur n'a été trouvé dans la base de données.</p>
                                             @endif
                                         </div>
@@ -293,9 +293,7 @@
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                             {{ number_format($stats['total']) }}
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                            100%
-                        </td>
+                        
                     </tr>
                     
                     <!-- Actifs -->
@@ -314,26 +312,13 @@
                     <!-- Bloqués -->
                     <tr>
                         <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                            Bloqués
+                            inactif 
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                            {{ number_format($stats['blocked']['count']) }}
+                            {{ number_format($stats['inactif']['count']) }}
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-red-600 font-medium">
-                            {{ $stats['blocked']['percentage'] }}%
-                        </td>
-                    </tr>
-                    
-                    <!-- Supprimés -->
-                    <tr>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                            Supprimés
-                        </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                            {{ number_format($stats['deleted']['count']) }}
-                        </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 font-medium">
-                            {{ $stats['deleted']['percentage'] }}%
+                            {{ $stats['inactif']['percentage'] }}%
                         </td>
                     </tr>
                 </tbody>
@@ -341,7 +326,7 @@
         </div>
 
         <!-- Barres de progression -->
-        <div class="space-y-4 mb-6">
+        <!-- <div class="space-y-4 mb-6">
             <div>
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
                     <span>Actifs</span>
@@ -355,23 +340,23 @@
             <div>
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
                     <span>Bloqués</span>
-                    <span>{{ $stats['blocked']['percentage'] }}%</span>
+                    <span>{{ $stats['inactif']['percentage'] }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['blocked']['percentage'] }}%"></div>
+                    <div class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactif']['percentage'] }}%"></div>
                 </div>
             </div>
             
             <div>
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Supprimés</span>
-                    <span>{{ $stats['deleted']['percentage'] }}%</span>
+                    <span>Inactifs</span>
+                    <span>{{ $stats['inactif']['percentage'] }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-gray-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['deleted']['percentage'] }}%"></div>
+                    <div class="bg-gray-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactif']['percentage'] }}%"></div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
     </div>

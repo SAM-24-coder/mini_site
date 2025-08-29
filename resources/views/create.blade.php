@@ -94,8 +94,8 @@
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
                 <select name="status" id="status" 
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="actif" {{ old('status', 'actif') == 'actif' ? 'selected' : '' }}>Actif</option>
-                    <option value="supprime" {{ old('status') == 'supprime' ? 'selected' : '' }}>Supprimé</option>
+                    <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Actif</option>
+                    <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactif</option>
                 </select>
                 @error('status')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
