@@ -36,6 +36,7 @@ class CleanUsersMigrations extends Command
             // Migrations qui modifient users
             '2025_08_29_170500_add_fields_to_users_table.php',
             '2025_08_29_170626_add_surname_to_users_table.php',
+            '2025_08_29_153941_create_groupes_table.php',
         ];
 
         foreach ($filesToDelete as $file) {
