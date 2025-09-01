@@ -47,7 +47,7 @@
         </div>
         <!-- DASHBOARD TEXT CORRIGÉ -->
         <div class="ml-10 text-lg font-semibold text-white lg:ml-0">
-            <a href="{{ route('admin.dashboard') }}">DASHBOARD</a>
+            <a href="{{ route('admin.home') }}">DASHBOARD</a>
         </div>
         
         <!-- Profile section avec popup -->

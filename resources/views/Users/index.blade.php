@@ -7,7 +7,7 @@
     <!-- En-tête -->
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Gestion des utilisateurs</h1>
-        <a href="{{ route('admin.dashboard') }}" 
+        <a href="{{ route('admin.home') }}" 
            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
             Retour à l'accueil
         </a>
@@ -23,7 +23,7 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4"> Rechercher et filtrer</h2>
                 
-                <form method="GET" action="{{ route('admin.dashboard.show') }}" class="space-y-4">
+                <form method="GET" action="{{ route('admin.users.index') }}" class="space-y-4">
                     <!-- Ligne des champs de filtre -->
                     <div class="flex flex-wrap gap-4">
                         <!-- Recherche par nom -->
@@ -59,7 +59,7 @@
                                 class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition duration-200 font-medium">
                             Rechercher
                         </button>
-                        <a href="{{ route('admin.dashboard.show') }}" 
+                        <a href="{{ route('admin.users.index') }}" 
                         class="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-md transition duration-200 font-medium">
                             Réinitialiser
                         </a>
@@ -239,7 +239,7 @@
                                             @if(request('search_name') || request('status_filter'))
                                                 <div class="text-lg mb-2">🔍 Aucun résultat</div>
                                                 <p>Aucun utilisateur ne correspond à vos critères de recherche.</p>
-                                                <a href="{{ route('admin.dashboard.show') }}" 
+                                                <a href="{{ route('admin.users.index') }}" 
                                                    class="mt-3 inline-block text-blue-600 hover:text-blue-800 underline">
                                                     Afficher tous les utilisateurs
                                                 </a>

@@ -10,74 +10,75 @@ use App\Models\Group;
 
 class UserController extends Controller
 {
-    // Page d'accueil du dashboard
-    public function index(): View
-    {
-        return view('index');
-    }
+    
     
     // Afficher la liste des utilisateurs
-    public function show(Request $request): View
-{
-    $query = User::query();
-    
-    // Recherche par nom / prénom / email
-    if ($request->filled('search_name')) {
-        $searchTerm = trim($request->get('search_name'));
-        $query->where(function($q) use ($searchTerm) {
-            $q->where('name', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('surname', 'LIKE', "%{$searchTerm}%")
-              ->orWhere('email', 'LIKE', "%{$searchTerm}%");
-        });
+    public function index(Request $request): View
+    {
+        $query = $this->buildSearchQuery($request);
+        $query = $this->applyFilters($query, $request);
+        
+        $users = $query->paginate(10)->appends($request->query());
+        $stats = $this->getUserStats();
+        
+        return view('Users.index', compact('users', 'stats'));
     }
     
-    // Filtrage par statut
-    if ($request->filled('status_filter')) {
-        $statusFilter = $request->get('status_filter');
-        if (in_array($statusFilter, ['active', 'inactive'])) {
-            $query->where('status', $statusFilter);
+    protected function buildSearchQuery(Request $request)
+    {
+        $query = User::query();
+        
+        if ($request->filled('search_name')) {
+            $searchTerm = trim($request->get('search_name'));
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('surname', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('email', 'LIKE', "%{$searchTerm}%");
+            });
         }
+        
+        return $query;
     }
     
-    // Tri par nom ou par défaut
-    if ($request->filled('sort_name') && in_array($request->get('sort_name'), ['asc', 'desc'])) {
-        $query->orderBy('name', $request->get('sort_name'));
-    } else {
-        $query->orderBy('id', 'desc');
+    protected function applyFilters($query, Request $request)
+    {
+        if ($request->filled('status_filter')) {
+            $statusFilter = $request->get('status_filter');
+            if (in_array($statusFilter, ['active', 'inactive'])) {
+                $query->where('status', $statusFilter);
+            }
+        }
+        
+        return $query;
     }
     
-    // Pagination
-    $users = $query->paginate(10)->appends($request->query());
+    protected function getUserStats(): array
+    {
+        $totalUsers = User::count();
+        $activeUsers = User::where('status', 'active')->count();
+        $inactiveUsers = User::where('status', 'inactive')->count();
     
-    // Stats
-    $totalUsers    = User::count();
-    $activeUsers   = User::where('status', 'active')->count();
-    $inactiveUsers = User::where('status', 'inactive')->count();
-
-    $stats = [
-        'total'    => $totalUsers,
-        'active'   => [
-            'count'      => $activeUsers,
-            'percentage' => $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0
-        ],
-        'inactive' => [
-            'count'      => $inactiveUsers,
-            'percentage' => $totalUsers > 0 ? round(($inactiveUsers / $totalUsers) * 100, 1) : 0
-        ],
-    ];
-    
-    return view('show', compact('users', 'stats'));
-}
-
+        return [
+            'total' => $totalUsers,
+            'active' => [
+                'count' => $activeUsers,
+                'percentage' => $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0
+            ],
+            'inactive' => [
+                'count' => $inactiveUsers,
+                'percentage' => $totalUsers > 0 ? round(($inactiveUsers / $totalUsers) * 100, 1) : 0
+            ],
+        ];
+    }
     
     // Afficher le formulaire de création
     public function create(): View
     {
-        return view('create');
+        return view('Users.create');
     }
     
     // Enregistrer un nouvel utilisateur
-    public function create_user(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name'                  => 'required|string|max:255',
@@ -106,118 +107,21 @@ class UserController extends Controller
     
         User::create($validated);
         
-        return redirect()->route('admin.dashboard.show')->with('success', 'Utilisateur créé avec succès');
+        return redirect()->route('admin.users.index')->with('success', 'Utilisateur créé avec succès');
     }
 
-    public function create_pmnt(): View
-    {
-        return view('create_pmnt');
-    }
-
-    public function show_pmnt(): View
-    {
-        $payments = Payment::latest()->paginate(10);
-        return view('show_pmnt', compact('payments'));
-    }   
-    
     /**
-     * Génère un ID KirooWorld unique
-     * Format: KW-YYYYMMDD-XXXXX (où X sont des chiffres aléatoires)
+     * Display the specified user.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
      */
-    private function generateKirooWorldId()
+    public function show($id)
     {
-        $prefix = 'KW-' . date('Ymd') . '-';
-        $maxTries = 100;
-        
-        for ($i = 0; $i < $maxTries; $i++) {
-            $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
-            $idKw = $prefix . $random;
-            
-            if (!Payment::where('idKw', $idKw)->exists()) {
-                return $idKw;
-            }
-        }
-        
-        throw new \RuntimeException('Impossible de générer un ID KirooWorld unique après plusieurs tentatives');
+        $user = User::with(['payments', 'groups'])->findOrFail($id);
+        return view('Users.show', compact('user'));
     }
 
-    public function store_pmnt(Request $request)
-    {
-        $validated = $request->validate([
-            'user_name'      => 'required|string|max:255',
-            'email'          => 'required|email|max:255',
-            'pack'           => 'required|string|max:255',
-            'amount'         => 'required|numeric|min:0',
-            'payment_system' => 'required|string|max:255',
-            'status'         => 'required|string|max:255',
-            'invoice_code'   => [
-                'required',
-                'string',
-                'max:255',
-                function ($attribute, $value, $fail) {
-                    if (Payment::where('invoice_code', $value)->exists()) {
-                        $fail('Ce code facture existe déjà.');
-                    }
-                },
-            ],
-            'date'           => 'required|date',
-            'time'           => 'required',
-        ]);
-        
-        $validated['idKw'] = $this->generateKirooWorldId();
-
-        try {
-            $payment = Payment::create($validated);
-            
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Paiement ajouté avec succès',
-                    'data' => $payment
-                ]);
-            }
-
-            return redirect()->route('admin.dashboard.show_pmnt')->with('success', 'Paiement ajouté avec succès.');
-            
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erreur lors de l\'ajout du paiement: ' . $e->getMessage()
-                ], 500);
-            }
-            return back()->with('error', 'Erreur lors de l\'ajout du paiement: ' . $e->getMessage());
-        }
-    }
-
-    public function show_group(): View
-    {
-        $groups = Group::latest()->paginate(10);
-        return view('show_group', compact('groups'));
-    }
+   
     
-    public function create_group(): View
-    {
-        return view('create_group');
-    }
-    
-    public function store_group(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'tag' => 'required|string|max:255|unique:groups,tag',
-        'description' => 'nullable|string',
-    ]);
-
-    $validated['created_by'] = auth()->id();
-
-    Group::create($validated);
-
-    return redirect()->route('admin.dashboard.show_group')->with('success', 'Groupe créé avec succès');
-}
-    public function destroy(Group $group)
-    {
-        $group->delete();
-        return back()->with('success', 'Groupe supprimé');
-    }
 }

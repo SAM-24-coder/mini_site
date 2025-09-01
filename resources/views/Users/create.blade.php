@@ -6,7 +6,7 @@
 <div class="max-w-2xl mx-auto">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Créer un utilisateur</h1>
-        <a href="{{ route('admin.dashboard') }}" 
+        <a href="{{ route('admin.home') }}" 
            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
             Retour à l'accueil
         </a>
@@ -30,7 +30,7 @@
         </div>
     @endif
     
-    <form method="POST" action="{{ route('admin.dashboard.store') }}" class="bg-white shadow-md rounded-lg p-6">
+    <form method="POST" action="{{ route('admin.users.store') }}" class="bg-white shadow-md rounded-lg p-6">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

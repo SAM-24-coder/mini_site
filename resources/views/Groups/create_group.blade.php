@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="text-2xl font-bold mb-6">Créer un nouveau groupe</h1>
     
-    <form method="POST" action="{{ route('admin.dashboard.store_group') }}" class="space-y-4">
+    <form method="POST" action="{{ route('admin.groups.store_group') }}" class="space-y-4">
         @csrf
         
         <div>
@@ -28,7 +28,7 @@
         </div>
         
         <div class="flex items-center justify-end gap-4">
-            <a href="{{ route('admin.dashboard.show_group') }}" 
+            <a href="{{ route('admin.groups.index') }}" 
                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                 Annuler
             </a>

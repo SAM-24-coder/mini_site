@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('surname');
+            $table->string('surname')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->string('gender');
-            $table->date('date_of_birth');
-            $table->string('phone');
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->string('registration_timestamp');
+            $table->string('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('phone')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active')->nullable();
+            $table->string('registration_timestamp')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

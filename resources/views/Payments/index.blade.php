@@ -8,7 +8,7 @@
     <!-- En-tête -->
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Gestion des paiements</h1>
-        <a href="{{ route('admin.dashboard') }}" 
+        <a href="{{ route('admin.home') }}" 
            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
             Retour à l'accueil
         </a>
@@ -28,7 +28,7 @@
             <h2 class="text-xl font-semibold text-gray-800 mb-4" id="formTitle">
                 Ajouter un nouveau paiement
             </h2>
-            <form id="paymentForm" method="POST" action="{{ route('admin.dashboard.store_pmnt') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form id="paymentForm" method="POST" action="{{ route('admin.payments.store_pmnt') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @csrf
                 <input type="hidden" id="editId" name="editId" value="">
 
