@@ -159,11 +159,11 @@
 
 <!-- JS: toggle & ajout dynamique -->
 <script>
-document.getElementById("toggleForm").addEventListener("click", () => {
-    document.getElementById("formContainer").classList.toggle("hidden");
-});
+    document.getElementById("toggleForm").addEventListener("click", () => {
+        document.getElementById("formContainer").classList.toggle("hidden");
+    });
 
-document.getElementById("paymentForm").addEventListener("submit", function(e) {
+    document.getElementById("paymentForm").addEventListener("submit", function(e) {
     e.preventDefault();
     
     const submitButton = this.querySelector('button[type="submit"]');
@@ -233,3 +233,4 @@ document.getElementById("paymentForm").addEventListener("submit", function(e) {
 });
 </script>
 @endsection
+ 

@@ -25,7 +25,7 @@ class PaymentController extends Controller
     private function generateKirooWorldId()
     {
         $prefix = 'KW-' . date('Ymd') . '-';
-        $maxTries = 100;
+        $maxTries = 1000;
         
         for ($i = 0; $i < $maxTries; $i++) {
             $random = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);

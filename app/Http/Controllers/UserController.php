@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,6 +9,9 @@ use App\Models\User;
 use Illuminate\View\View;
 use App\Models\Payment;
 use App\Models\Group;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -15,6 +20,7 @@ class UserController extends Controller
     // Afficher la liste des utilisateurs
     public function index(Request $request): View
     {
+        
         $query = $this->buildSearchQuery($request);
         $query = $this->applyFilters($query, $request);
         
@@ -40,6 +46,11 @@ class UserController extends Controller
         return $query;
     }
     
+    /**
+     * Summary of applyFilters
+     * @param mixed $query
+     * @param \Illuminate\Http\Request $request
+     */
     protected function applyFilters($query, Request $request)
     {
         if ($request->filled('status_filter')) {
@@ -88,24 +99,15 @@ class UserController extends Controller
             'gender'                => 'required|in:male,female',
             'date_of_birth'         => 'nullable|date',
             'status'                => 'required|in:active,inactif',
-            'password'              => 'required|min:8',
-            'password_confirmation' => 'required|min:8',
+            'password'              => 'required|min:8|confirmed',
         ]);
+
+        $data = $request->validated();
     
-        // Validation manuelle des mots de passe
-        if ($request->input('password') !== $request->input('password_confirmation')) {
-            return back()->withErrors(['password' => 'Les mots de passe ne correspondent pas.'])->withInput();
-        }
+        $data['password'] = bcrypt($data['password']);
+        $data['registration_timestamp'] = now();
     
-        $validated = $request->only([
-            'name', 'surname', 'email', 'phone', 
-            'gender', 'date_of_birth', 'status', 'password'
-        ]);
-    
-        $validated['password'] = bcrypt($validated['password']);
-        $validated['registration_timestamp'] = now();
-    
-        User::create($validated);
+        User::create($data);
         
         return redirect()->route('admin.users.index')->with('success', 'Utilisateur créé avec succès');
     }
