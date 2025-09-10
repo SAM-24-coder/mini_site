@@ -39,9 +39,33 @@ class PaymentController extends Controller
         throw new \RuntimeException('Impossible de générer un ID KirooWorld unique après plusieurs tentatives');
     }
 
+    /**
+     * Search users by name or email
+     */
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('q');
+        
+        $users = User::where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->select('id', 'name', 'email')
+                    ->limit(10)
+                    ->get()
+                    ->map(function($user) {
+                        return [
+                            'id' => $user->id,
+                            'text' => $user->name . ' (' . $user->email . ')',
+                            'email' => $user->email
+                        ];
+                    });
+        
+        return response()->json($users);
+    }
+
     public function store_pmnt(Request $request)
     {
         $validated = $request->validate([
+            'user_id'        => 'required|exists:users,id',
             'user_name'      => 'required|string|max:255',
             'email'          => 'required|email|max:255|exists:users,email',
             'pack'           => 'required|string|max:255',
@@ -62,16 +86,10 @@ class PaymentController extends Controller
             'time'           => 'required',
         ]);
         
-        // Find the user by email to get their ID
-        $user = User::where('email', $validated['email'])->first();
-        
         // Generate a unique KirooWorld ID
         $validated['idKw'] = $this->generateKirooWorldId();
         
-        // Add user_id to the validated data
-        if ($user) {
-            $validated['user_id'] = $user->id;
-        }
+        // Add user_id to the validated data (already validated to exist)
         
         try {
             // Create the payment

@@ -48,6 +48,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function() {
     // === GESTION DES PAIEMENTS ===
     Route::prefix('payments')->name('payments.')->controller(PaymentController::class)->group(function() {
         Route::get('/', 'index')->name('index');           // admin.payments.index - Liste des paiements
+        Route::get('/search-users', 'searchUsers')->name('search-users'); // admin.payments.search-users - Recherche d'utilisateurs
         Route::get('/create', 'create_pmnt')->name('create_pmnt');   // admin.payments.create_pmnt - Créer paiement
         Route::post('/', 'store_pmnt')->name('store_pmnt');          // admin.payments.store - Enregistrer paiement
         //Route::get('/{id}', 'show')->name('show');    // admin.payments.show - Voir paiement

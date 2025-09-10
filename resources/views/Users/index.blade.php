@@ -212,25 +212,6 @@
                                     </td>
                                     
                                     <!-- Actions -->
-                                   <!-- <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex space-x-2">
-                                            <a href="#" class="text-blue-600 hover:text-blue-900 transition duration-150">
-                                                 Voir
-                                            </a>
-                                            <a href="#" class="text-yellow-600 hover:text-yellow-900 transition duration-150">
-                                                 Modifier
-                                            </a>
-                                            @if($user->status === 'active')
-                                                <a href="#" class="text-red-600 hover:text-red-900 transition duration-150">
-                                                     Bloquer
-                                                </a>
-                                            @else
-                                                <a href="#" class="text-green-600 hover:text-green-900 transition duration-150">
-                                                     Activer
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </td>--->
                                 </tr>
                             @empty
                                 <tr>
@@ -326,39 +307,7 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Barres de progression -->
-        <!-- <div class="space-y-4 mb-6">
-            <div>
-                <div class="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Actifs</span>
-                    <span>{{ $stats['active']['percentage'] }}%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['active']['percentage'] }}%"></div>
-                </div>
-            </div>
-            
-            <div>
-                <div class="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Inactifs</span>
-                    <span>{{ $stats['inactive']['percentage'] }}%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactive']['percentage'] }}%"></div>
-                </div>
-            </div>
-            
-            <div>
-                <div class="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Inactifs</span>
-                    <span>{{ $stats['inactive']['percentage'] }}%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-gray-500 h-2 rounded-full transition-all duration-300" style="width: {{ $stats['inactive']['percentage'] }}%"></div>
-                </div>
-            </div>
-        </div> -->
+       
     </div>
 </div>
     </div>
